@@ -1,3 +1,5 @@
+//schedular.cpp
+
 #include "Scheduler.h"
 #include <iostream>
 #include <algorithm>
@@ -12,6 +14,28 @@ Scheduler::Scheduler(double refuelThreshold, double refuelStationX, double refue
     
     if (refuelThreshold <= 0) {
         throw std::invalid_argument("Refuel threshold must be positive");
+    }
+}
+
+void Scheduler::assignTasks() {
+    // Iterate through the tasks
+    for (auto& task : tasks) {
+        bool assigned = false;
+        
+        // Check UAV fleet to find an eligible UAV
+        for (auto& uav : uavs) {
+            if (uav.canCarry(task.getWeight()) && uav.canReach(task.getX(), task.getY())) {
+                // Assign the task if the UAV can carry and reach it
+                uav.assignTask(task);
+                std::cout << "Assigned Task " << task.getId() << " to UAV " << uav.getId() << std::endl;
+                assigned = true;
+                break; // Task assigned, exit UAV loop
+            }
+        }
+        
+        if (!assigned) {
+            std::cout << "No UAV available for Task " << task.getId() << std::endl;
+        }
     }
 }
 

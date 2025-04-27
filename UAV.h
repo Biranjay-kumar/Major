@@ -1,13 +1,16 @@
 #ifndef UAV_H
 #define UAV_H
 
+#include <string>  // For std::string in getStatus()
+
 class Task; // Forward declaration
 
 class UAV {
 public:
+    // Constructor
     UAV(int id, double weightCapacity, double energyCapacity, 
         double posX, double posY);
-    
+
     // Core functionality
     double distanceTo(double x, double y) const;
     void updateEnergy(double energyCost);
@@ -20,18 +23,26 @@ public:
     bool needsRefuel(double threshold) const;
     
     // Getters
-    int getId() const;
-    double getWeightCapacity() const;
-    double getEnergyCapacity() const;
-    double getCurrentEnergy() const;
-    double getPosX() const;
-    double getPosY() const;
+    int getId() const { return id; }
+    double getWeightCapacity() const { return weightCapacity; }
+    double getEnergyCapacity() const { return energyCapacity; }
+    double getCurrentEnergy() const { return currentEnergy; }
+    double getPosX() const { return posX; }
+    double getPosY() const { return posY; }
     
     // Task management
     void assignTask(const Task& task);
     void completeCurrentTask();
     
+    // Additional methods from implementation
+    void emergencyLand();
+    std::string getStatus() const;
+
 private:
+    // Validation helpers
+    void validateConstructionParameters() const;
+    void validateCoordinates(double x, double y) const;
+
     const int id;
     const double weightCapacity;
     const double energyCapacity;
